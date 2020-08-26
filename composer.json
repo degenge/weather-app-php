@@ -1,0 +1,6 @@
+{
+    "require": {
+        "nesbot/carbon": "^2.39",
+        "nnnick/chartjs": "^2.9"
+    }
+}
