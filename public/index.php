@@ -4,14 +4,16 @@ require_once '../src/helpers.php';
 require_once '../src/weather.php';
 require_once '../vendor/autoload.php';
 
-$city = "";
+const PREFERRED_CITY = 'Dendermonde';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cityName = test_input($_POST["city"]);
+} else {
+    $cityName = PREFERRED_CITY;
 }
 
 $weather  = getWeather($cityName);
-$forecast = getForecast($cityName, TIME_MODES::NIGHT);
+$forecast = getForecast($cityName, TIME_MODES::DAY);
 
 ?>
 <!DOCTYPE html>
@@ -47,7 +49,9 @@ $forecast = getForecast($cityName, TIME_MODES::NIGHT);
 
     <!--<link rel="stylesheet" href="vendor/font-awesome/css/all.css" />-->
 
+
     <title >Weather app</title >
+
 </head >
 
 <body >
@@ -98,7 +102,7 @@ $forecast = getForecast($cityName, TIME_MODES::NIGHT);
 
                     <div class="col-sm-6 current-temperature__content-container" >
                         <div id="currentTemperatureValue" class="current-temperature__value" ><?php echo $weather['temperatureCurrent']; ?></div >
-                        <div id="currentTemperatureFeelsLikeValue" class="current-temperature-feelslike__value" ><?php echo $weather['temperatureFeelsLike']; ?></div >
+                        <div id="currentTemperatureFeelsLikeValue" class="current-temperature-feelslike__value" >Feels like <?php echo $weather['temperatureFeelsLike']; ?></div >
                         <div id="currentTemperatureSummary" class="current-temperature__summary" ><?php echo $weather['description']; ?></div >
                     </div >
 
@@ -115,11 +119,11 @@ $forecast = getForecast($cityName, TIME_MODES::NIGHT);
                         <div class="text-muted current-stats__label" >High</div >
                     </div >
                     <div class="col-md-3 col-sm-6" >
-                        <div id="currentStatsWindSpeedValue" class="current-stats__value" ><?php echo $weather['wind']; ?></div >
+                        <div id="currentStatsWindSpeedValue" class="current-stats__value" ><?php echo $weather['wind']; ?>m/s</div >
                         <div class="text-muted current-stats__label" >Wind</div >
                     </div >
                     <div class="col-md-3 col-sm-6" >
-                        <div id="currentStatsPressureValue" class="current-stats__value" ><?php echo $weather['pressure']; ?></div >
+                        <div id="currentStatsPressureValue" class="current-stats__value" ><?php echo $weather['pressure']; ?>hPa</div >
                         <div class="text-muted current-stats__label" >Pressure</div >
                     </div >
                     <div class="col-md-3 col-sm-6" >
@@ -134,11 +138,11 @@ $forecast = getForecast($cityName, TIME_MODES::NIGHT);
                         <div class="text-muted current-stats__label" >Low</div >
                     </div >
                     <div class="col-md-3 col-sm-6" >
-                        <div id="currentStatsCloudsValue" class="current-stats__value" ><?php echo $weather['clouds']; ?></div >
+                        <div id="currentStatsCloudsValue" class="current-stats__value" ><?php echo $weather['clouds']; ?>%</div >
                         <div class="text-muted current-stats__label" >Clouds</div >
                     </div >
                     <div class="col-md-3 col-sm-6" >
-                        <div id="currentStatsHumidityValue" class="current-stats__value" ><?php echo $weather['humidity']; ?></div >
+                        <div id="currentStatsHumidityValue" class="current-stats__value" ><?php echo $weather['humidity']; ?>%</div >
                         <div class="text-muted current-stats__label" >Humidity</div >
                     </div >
                     <div class="col-md-3 col-sm-6" >
@@ -224,8 +228,8 @@ $forecast = getForecast($cityName, TIME_MODES::NIGHT);
                             <div class="next-5-days__row" >
 
                                 <div class="next-5-days__date" >
-                                    <div class="next-5-days__value" >Mon</div >
-                                    <div class="next-5-days__label" ><?php echo $item['dt'] ?></div >
+                                    <div class="next-5-days__value" ><?php echo $item['dateDayName'] ?></div >
+                                    <div class="next-5-days__label" ><?php echo $item['dateDayMonth'] ?></div >
                                 </div >
 
                                 <div class="next-5-days__icon" >
@@ -235,22 +239,22 @@ $forecast = getForecast($cityName, TIME_MODES::NIGHT);
 
                                 <div class="next-5-days__low" >
                                     <div class="next-5-days__value" >Low</div >
-                                    <div class="next-5-days__label" ><?php echo $item['temperatureCurrent'] ?></div >
+                                    <div class="next-5-days__label" ><?php echo $item['temperatureCurrent'] ?>°</div >
                                 </div >
 
                                 <div class="next-5-days__high" >
                                     <div class="next-5-days__value" >High</div >
-                                    <div class="next-5-days__label" ><?php echo $item['temperatureCurrent'] ?></div >
+                                    <div class="next-5-days__label" ><?php echo $item['temperatureCurrent'] ?>°</div >
                                 </div >
 
                                 <div class="next-5-days__rain" >
                                     <div class="next-5-days__value" >Clouds</div >
-                                    <div class="next-5-days__label" ><?php echo $item['clouds'] ?></div >
+                                    <div class="next-5-days__label" ><?php echo $item['clouds'] ?>%</div >
                                 </div >
 
                                 <div class="next-5-days__wind" >
                                     <div class="next-5-days__value" >Wind</div >
-                                    <div class="next-5-days__label" ><?php echo $item['wind'] ?></div >
+                                    <div class="next-5-days__label" >m/s</div >
                                 </div >
 
                             </div >
@@ -282,10 +286,10 @@ $forecast = getForecast($cityName, TIME_MODES::NIGHT);
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script
-        src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"
-></script >
+        src="https://code.jquery.com/jquery-3.5.1.min.js"
+        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+        crossorigin="anonymous" >
+</script >
 <script
         src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
@@ -301,6 +305,92 @@ $forecast = getForecast($cityName, TIME_MODES::NIGHT);
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"
         integrity="sha512-QEiC894KVkN9Tsoi6+mKf8HaCLJvyA6QIRzY5KrfINXYuP9NxdIkRQhGq3BZi0J4I7V5SidGM3XUQ5wFiMDuWg=="
         crossorigin="anonymous" ></script >
+
+<script >
+
+    let ctx = document.getElementById("nextFiveDaysChart").getContext('2d');
+    drawChart(ctx);
+
+    //(function () {
+
+
+    function drawChart(ctx) {
+
+        let data = '';
+        data = <?php echo json_encode(getForecast($cityName, TIME_MODES::DAY)) ?>;
+
+        $.ajax({
+            url: "data.php",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                mappedForecast: data
+            },
+            success: function (result) {
+                let myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: result.legend,
+                        datasets: [{
+                            label: ' Temperature (°C)',
+                            data: result.data,
+                            backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                            borderColor: '#f4a91a',
+                            clip: 50,
+                            fill: false,
+                            lineTension: 0.1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            xAxes: [{
+                                gridLines: {
+                                    drawTicks: true,
+                                    offsetGridLines: false,
+                                    zeroLineColor: 'rgba(255, 255, 255, 0.25)'
+                                },
+                                ticks: {
+                                    beginAtZero: true,
+                                    fontColor: 'white',
+                                    fontStyle: '300',
+                                    fontSize: 14
+                                }
+                            }],
+                            yAxes: [{
+                                gridLines: {
+                                    drawTicks: true,
+                                    offsetGridLines: false,
+                                    zeroLineColor: 'rgba(255, 255, 255, 0.25)'
+                                },
+                                ticks: {
+                                    beginAtZero: true,
+                                    fontColor: 'white',
+                                    fontStyle: '300',
+                                    fontSize: 14
+                                },
+                            }]
+                        },
+                        layout: {
+                            padding: 25
+                        },
+                        legend: {
+                            display: true,
+                            labels: {
+                                boxWidth: 2,
+                                fontColor: 'white',
+                                fontStyle: '300',
+                                fontSize: 16
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+
+    //})();
+</script >
 
 </body >
 </html >

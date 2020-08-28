@@ -19,15 +19,15 @@ function getWeather($cityName)
 
     $mappedWeather = [
         'name'                 => $jsonArray['name'],
-        'dt'                   => Carbon::createFromTimestamp($jsonArray['dt']),
+        'dt'                   => Carbon::createFromTimestamp($jsonArray['dt'])->format('d-m-Y H:i'),
         'image'                => IMAGE_PATH . $jsonArray['weather'][0]['icon'] . ".svg",
-        'temperatureCurrent'   => calculateTemperature($jsonArray['main']['temp'], TEMPERATURE_SCALES::CELCIUS) . '&deg;',
-        'temperatureFeelsLike' => calculateTemperature($jsonArray['main']['feels_like'], TEMPERATURE_SCALES::CELCIUS) . '&deg;',
+        'temperatureCurrent'   => calculateTemperature($jsonArray['main']['temp'], TEMPERATURE_SCALES::CELCIUS),
+        'temperatureFeelsLike' => calculateTemperature($jsonArray['main']['feels_like'], TEMPERATURE_SCALES::CELCIUS),
         'description'          => $jsonArray['weather'][0]['description'],
-        'pressure'             => $jsonArray['main']['pressure'] . 'hPa',
-        'humidity'             => $jsonArray['main']['humidity'] . '%',
-        'wind'                 => $jsonArray['wind']['speed'] . 'm/s',
-        'clouds'               => $jsonArray['clouds']['all'] . '%',
+        'pressure'             => $jsonArray['main']['pressure'],
+        'humidity'             => $jsonArray['main']['humidity'],
+        'wind'                 => $jsonArray['wind']['speed'],
+        'clouds'               => $jsonArray['clouds']['all'],
         'sunrise'              => Carbon::createFromTimestamp($jsonArray['sys']['sunrise'])->toTimeString(),
         'sunset'               => Carbon::createFromTimestamp($jsonArray['sys']['sunset'])->toTimeString(),
     ];
@@ -45,8 +45,6 @@ function getForecast($cityName, $timeMode)
     // ADD ONE DAY TO CURRENT DATE
     $dateDay   = Carbon::now()->addDays(1)->setHour(12)->setMinutes(00)->setSeconds(00);
     $dateNight = Carbon::now()->addDays(1)->setHour(00)->setMinutes(00)->setSeconds(00);
-    echo $dateDay;
-    echo $dateNight;
 
     $tempForecastDay   = [];
     $tempForecastNight = [];
@@ -63,22 +61,24 @@ function getForecast($cityName, $timeMode)
         }
 
     }
-    print_arr($tempForecastDay);
-    print_arr($tempForecastNight);
+    //print_arr($tempForecastDay);
+    //print_arr($tempForecastNight);
 
     $mappedForecastDay   = [];
     $mappedForecastNight = [];
     foreach ($tempForecastDay as $item) {
         $mappedForecastDay[] = [
             'dt'                   => Carbon::createFromTimestamp($item['dt']),
+            'dateDayName'          => Carbon::createFromTimestamp($item['dt'])->isoFormat('ddd'),
+            'dateDayMonth'         => Carbon::createFromTimestamp($item['dt'])->format('d/m'),
             'image'                => IMAGE_PATH . $item['weather'][0]['icon'] . ".svg",
-            'temperatureCurrent'   => calculateTemperature($item['main']['temp'], TEMPERATURE_SCALES::CELCIUS) . '&deg;',
-            'temperatureFeelsLike' => calculateTemperature($item['main']['feels_like'], TEMPERATURE_SCALES::CELCIUS) . '&deg;',
+            'temperatureCurrent'   => calculateTemperature($item['main']['temp'], TEMPERATURE_SCALES::CELCIUS),
+            'temperatureFeelsLike' => calculateTemperature($item['main']['feels_like'], TEMPERATURE_SCALES::CELCIUS),
             'description'          => $item['weather'][0]['description'],
-            'pressure'             => $item['main']['pressure'] . 'hPa',
-            'humidity'             => $item['main']['humidity'] . '%',
-            'wind'                 => $item['wind']['speed'] . 'm/s',
-            'clouds'               => $item['clouds']['all'] . '%',
+            'pressure'             => $item['main']['pressure'],
+            'humidity'             => $item['main']['humidity'],
+            'wind'                 => $item['wind']['speed'],
+            'clouds'               => $item['clouds']['all'],
             //'sunrise'              => Carbon::createFromTimestamp($item['sys']['sunrise'])->toTimeString(),
             //'sunset'               => Carbon::createFromTimestamp($item['sys']['sunset'])->toTimeString(),
         ];
@@ -86,14 +86,16 @@ function getForecast($cityName, $timeMode)
     foreach ($tempForecastNight as $item) {
         $mappedForecastNight[] = [
             'dt'                   => Carbon::createFromTimestamp($item['dt']),
+            'dateDayName'          => Carbon::createFromTimestamp($item['dt'])->isoFormat('ddd'),
+            'dateDayMonth'         => Carbon::createFromTimestamp($item['dt'])->format('d/m'),
             'image'                => IMAGE_PATH . $item['weather'][0]['icon'] . ".svg",
-            'temperatureCurrent'   => calculateTemperature($item['main']['temp'], TEMPERATURE_SCALES::CELCIUS) . '&deg;',
-            'temperatureFeelsLike' => calculateTemperature($item['main']['feels_like'], TEMPERATURE_SCALES::CELCIUS) . '&deg;',
+            'temperatureCurrent'   => calculateTemperature($item['main']['temp'], TEMPERATURE_SCALES::CELCIUS),
+            'temperatureFeelsLike' => calculateTemperature($item['main']['feels_like'], TEMPERATURE_SCALES::CELCIUS),
             'description'          => $item['weather'][0]['description'],
-            'pressure'             => $item['main']['pressure'] . 'hPa',
-            'humidity'             => $item['main']['humidity'] . '%',
-            'wind'                 => $item['wind']['speed'] . 'm/s',
-            'clouds'               => $item['clouds']['all'] . '%',
+            'pressure'             => $item['main']['pressure'],
+            'humidity'             => $item['main']['humidity'],
+            'wind'                 => $item['wind']['speed'],
+            'clouds'               => $item['clouds']['all'],
             //'sunrise'              => Carbon::createFromTimestamp($item['sys']['sunrise'])->toTimeString(),
             //'sunset'               => Carbon::createFromTimestamp($item['sys']['sunset'])->toTimeString(),
         ];

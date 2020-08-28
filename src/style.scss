@@ -145,6 +145,14 @@ h1 {
   font-weight: 300;
 }
 
+.current-temperature__value::after {
+  content: '\00B0';
+}
+
+.current-temperature-feelslike__value::after{
+  content: '\00B0';
+}
+
 .current-temperature__summary {
   //margin-top: -0.5em;
   //margin-left: -0.6em;
